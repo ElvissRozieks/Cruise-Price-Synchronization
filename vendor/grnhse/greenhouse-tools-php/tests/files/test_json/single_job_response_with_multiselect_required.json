@@ -1,0 +1,140 @@
+{
+	"id": 167538,
+	"internal_job_id": 187771,
+	"title": "Controller",
+	"updated_at": "2016-03-21T15:53:06-04:00",
+	"location": {
+		"name": "New York"
+	},
+	"absolute_url": "http://www.greenhouse.io/careers/job?gh_jid=167538",
+	"metadata": null,
+	"content": "test",
+	"departments": [{
+		"id": 7219,
+		"name": "Finance"
+	}],
+	"offices": [{
+		"id": 13,
+		"name": "New York",
+		"location": "Manhattan, NY 10007"
+	}],
+	"questions": [{
+		"label": "First Name",
+		"fields": [{
+			"name": "first_name",
+			"type": "input_text"
+		}],
+		"required": true
+	}, {
+		"label": "Last Name",
+		"fields": [{
+			"name": "last_name",
+			"type": "input_text"
+		}],
+		"required": true
+	}, {
+		"label": "Email",
+		"fields": [{
+			"name": "email",
+			"type": "input_text"
+		}],
+		"required": true
+	}, {
+		"label": "Phone",
+		"fields": [{
+			"name": "phone",
+			"type": "input_text"
+		}],
+		"required": false
+	}, {
+		"label": "Resume",
+		"fields": [{
+			"name": "resume",
+			"type": "input_file"
+		}, {
+			"name": "resume_text",
+			"type": "textarea"
+		}],
+		"required": true
+	}, {
+		"label": "Cover Letter",
+		"fields": [{
+			"name": "cover_letter",
+			"type": "input_file"
+		}, {
+			"name": "cover_letter_text",
+			"type": "textarea"
+		}],
+		"required": true
+	}, {
+		"label": "LinkedIn Profile",
+		"fields": [{
+			"name": "question_1042159",
+			"type": "input_text"
+		}],
+		"required": true
+	}, {
+		"label": "How did you hear about this job?",
+		"fields": [{
+			"name": "question_1042161",
+			"type": "input_text"
+		}],
+		"required": false
+	}, {
+		"label": "Are you authorized to work in the United States?",
+		"fields": [{
+			"name": "question_1042162",
+			"type": "multi_value_single_select",
+			"values": [{
+				"label": "No",
+				"value": 0
+			}, {
+				"label": "Yes",
+				"value": 1
+			}]
+		}],
+		"required": false
+	}, {
+		"label": "Will you now or in the future require visa sponsorship?",
+		"fields": [{
+			"name": "question_1042163",
+			"type": "multi_value_single_select",
+			"values": [{
+				"label": "No",
+				"value": 0
+			}, {
+				"label": "Yes",
+				"value": 1
+			}]
+		}],
+		"required": false
+	}, {
+        "label": "Do you have the right to work in the UK?",
+        "required": true,
+        "fields": [
+            {
+                "name": "question_579460[]",
+                "type": "multi_value_multi_select",
+                "values": [
+                    {
+                        "label": "UK Passport",
+                        "value": 225451
+                    },
+                    {
+                        "label": "EEA Passport",
+                        "value": 225452
+                    },
+                    {
+                        "label": "Other visa",
+                        "value": 225453
+                    },
+                    {
+                        "label": "No",
+                        "value": 225454
+                    }
+                ]
+            }
+        ]
+    }],
+	"compliance": null
+}

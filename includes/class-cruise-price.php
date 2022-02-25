@@ -157,6 +157,18 @@ class Cruise_Price {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		// add admin menu items
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'cruise_price_admin_menu' ); // Add Main page
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'cruise_price_admin_sub_menu' ); // Sub pages
+
+		//register setting fields
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_cruise_price_setting_fields' );
+	
+		// Create CPT to hold greenhouse board data
+		$this->loader->add_action( 'init', $plugin_admin, 'cruise_price_list_cpt' );
+
+		// Add cron job
+		$this->loader->add_action('travel_board_cron_updater' , $plugin_admin, 'travel_board_cron_updater');
 	}
 
 	/**
@@ -172,6 +184,16 @@ class Cruise_Price {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+		// Add short code for plugins
+		$this->loader->add_shortcode( 'cruise_api_list', $plugin_public, 'TravelBoardDisplay' );
+		
+		// Override single-job template
+		$this->loader->add_filter( 'single_template', $plugin_public, 'override_single_template' );
+
+		// Ajax call
+		$this->loader->add_action( 'wp_ajax_submit_ajax_request', $plugin_public, 'submit_ajax_request' );    //execute when wp logged in
+		$this->loader->add_action( 'wp_ajax_nopriv_submit_ajax_request', $plugin_public, 'submit_ajax_request'); //execute when logged out
 
 	}
 

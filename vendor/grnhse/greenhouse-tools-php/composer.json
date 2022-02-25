@@ -1,0 +1,28 @@
+{
+    "name": "grnhse/greenhouse-tools-php",
+    "type": "library",
+    "description": "A PHP package containing services to interact with Greenhouse's job board and APIs.",
+    "keywords": ["api", "greenhouse", "job board"],
+    "homepage": "https://github.com/grnhse/greenhouse-tools-php",
+    "authors": [
+        {
+            "name": "Tom Phillips",
+            "email": "tphillips@greenhouse.io"
+        }
+    ],
+    "require": {
+        "php": ">=7.3",
+        "guzzlehttp/guzzle": "~7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "php": ">=7.3"
+
+    },
+    "autoload": {
+        "psr-4": { "Greenhouse\\GreenhouseToolsPhp\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Greenhouse\\GreenhouseToolsPhp\\Tests\\": "tests/" }
+    }
+}

@@ -31,6 +31,11 @@ class Cruise_Price_Activator {
 	 */
 	public static function activate() {
 
+		//Set cron job
+		if(!wp_next_scheduled( 'travel_board_cron_updater' )) {
+			wp_schedule_event( time(), 'hourly', 'travel_board_cron_updater');
+		}
+
 	}
 
 }

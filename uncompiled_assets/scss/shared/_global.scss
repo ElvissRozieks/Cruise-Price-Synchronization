@@ -1,0 +1,49 @@
+/* Configuration Variables */
+
+label{
+	width: 100%;
+}
+
+input, textarea{
+
+    &.error{
+	    border-color:$redColor !important;
+    }
+}
+
+#apply-form{
+    &.submited{
+	    border: 1px solid $redColor;
+	    padding:1em;
+    }
+}
+
+.field{
+	margin: 1em 0;
+}
+
+.field{
+    input{
+	    margin-top: .5em;
+    }
+
+    .text_block_wrapper {
+        margin: 2em 0px;
+    }
+}
+
+.flex-container{
+    display: flex;
+}
+
+.flex-block{
+    flex:1;
+}
+
+.flex-center {
+    align-self: center;
+}
+
+.asterisk {
+    color:$redColor;
+}

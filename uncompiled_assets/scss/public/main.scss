@@ -1,0 +1,236 @@
+// Define Shared Imports
+@import '../shared/variables'; /* Define SCSS variables */
+@import '../shared/mixings'; /* Define SCSS mixings */
+@import '../shared/global'; /* Define SCSS global's */
+
+// Define Public Imports
+
+.application_lala {
+    text-align: left;
+    display: flex;
+    justify-content: flex-end; 
+}
+
+ul#social-share {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    li.social-item {
+        list-style: none;
+        margin: 0 .5em 0 0;
+        padding-left: 0;
+        a {
+            display: block;
+            &.facebook{
+                svg{
+                    fill:$facebookColor;
+                }
+            }
+            &.twitter{
+                svg{
+                    fill:$twiterColor;
+                }
+            }
+            &.linked{
+                svg{
+                    fill:$linkedinColor;
+                }
+            }
+            svg {
+                width: 26px;
+            }
+        }
+    }
+}
+#apply-form{
+    margin: $standartSpacing 0;
+    .field {
+
+        .hidden-type{
+            &.error{
+                label {
+                    border: 1px solid $redColor;
+                }
+            }
+        }
+        textarea , input {
+            border: 1px solid $grey;
+        }
+        .choose-button-container{
+            .choose-button{
+                &:first-of-type{
+                    margin-right: .5em;
+                }
+                a{
+                    font-size: 0.8em;
+                }
+            }
+        }
+        label {
+            font-size: 0.9em; 
+            display: block;
+            margin-bottom: .3em;
+        }
+        .hidden-type {
+            display: none;
+        }
+        .inputfile {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+
+            & + label {
+                width: 100%;
+                font-size: .8em;
+                font-weight: 700;
+                cursor: pointer;
+                overflow: hidden;
+                display: block;
+                padding: 3em 0px;
+            }
+
+            &:focus{
+                & + label{
+                    outline: 1px dotted #000;
+                    outline: -webkit-focus-ring-color auto 5px;
+                }
+            }
+
+            &.has-focus {
+                & + label{
+                    outline: 1px dotted #000;
+                    outline: -webkit-focus-ring-color auto 5px;
+                }
+            }
+            & + label svg {
+                width: 1em;
+                height: 1em;
+                vertical-align: middle;
+                fill: currentColor;
+                margin-top: -0.25em;
+                margin-right: 0.25em;
+            }
+        }
+        .inputfile-3 {
+            & + label {
+                color: $hyperblue;
+                border: 1px solid $hyperblue;
+                text-align: center;
+                margin: 2em 0;
+            }
+            &:focus {
+                & + label {
+                    color: $hyperblue;
+                }
+            }
+            &.has-focus {
+                & + label {
+                    color: $hyperblue;
+                }
+            }
+
+            &:hover {
+                color: $hyperblue;
+            }
+        }
+    }
+    a {
+        color: $hyperblue !important;
+        transition: all .5s ease;
+        &:hover{
+            opacity: .5;
+        }
+    }
+    #submit_app {
+        color: $hyperblue;
+        border: 1px solid $hyperblue;
+        background-color: #fff;
+        &:hover {
+            color: #fff;
+            background-color: $hyperblue;
+        }
+    }
+    .required-fields{
+        font-size: 0.7em;
+        align-self: center;
+    }
+    .form-border-top {
+        text-align: right;
+        padding: $standartSpacing 0;
+        border-top: 1px solid $grey;
+        margin-top: $standartSpacing;
+    }
+    /* The container */
+    .checkbox-container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        .checkmark {
+            margin-top: 4px;
+            &:after{
+                content: "";
+                position: absolute;
+                display: none;   
+            }
+            &.error{
+                background-color: $redColor;
+            }
+        }
+         /* Hide the browser's default checkbox */
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+            &.checkmark {
+                background-color: #ccc;
+            }
+            &:checked {
+                & ~ .checkmark {
+                    background-color: #2196F3;
+                }
+
+                & ~ :after {
+                    display: block;
+                }
+            }
+        }
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+                &:after{
+                    left: 9px;
+                    top: 6px;
+                    width: 8px;
+                    height: 10px;
+                    border: solid white;
+                    border-width: 0 3px 3px 0;
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                }
+        }
+        &:hover {
+            input {
+                &.checkmark {
+                    background-color: #ccc;
+                }
+            }
+        }
+    }
+}

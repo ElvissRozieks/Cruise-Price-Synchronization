@@ -1,0 +1,35 @@
+# Only allow direct access to specific Web-available files.
+
+# Apache 2.2
+<IfModule !mod_authz_core.c>
+	Order Deny,Allow
+	Deny from all
+</IfModule>
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
+
+# Greenhouse_harvester CSS and JS
+<FilesMatch "^(public-greenhouse-harvest.bundle.min\.js|ajax-greenhouse-harvest.bundle.min\.js|admin-greenhouse-harvest.bundle.min\.js|admin-greenhouse-harvest.min\.css|public-greenhouse-harvest.min\.css)$">
+	<IfModule !mod_authz_core.c>
+		Allow from all
+	</IfModule>
+
+	<IfModule mod_authz_core.c>
+		Require all granted
+	</IfModule>
+</FilesMatch>
+
+
+# Greenhouse_harvester icon
+<FilesMatch "^gh_harvest_icon\.svg$">
+	<IfModule !mod_authz_core.c>
+		Allow from all
+	</IfModule>
+	
+	<IfModule mod_authz_core.c>
+		Require all granted
+	</IfModule>
+</FilesMatch>

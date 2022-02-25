@@ -1,0 +1,8 @@
+// Define Global Imports
+@import '../shared/variables'; /* Define SCSS variables */
+@import '../shared/mixings'; /* Define SCSS mixings */
+@import '../shared/global'; /* Define SCSS global's */
+//@import "~bootstrap/scss/bootstrap"; /* Define bootstrap for admin page */
+
+// Define Admin Imports
+@import '_menu'; /* Main menu style */

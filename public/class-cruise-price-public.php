@@ -126,7 +126,7 @@ class Cruise_Price_Public {
 		foreach($strJsonFileContentsJson as $key => $value) {
 			echo '----';
 			echo '<br>';
-			echo '<div> TABULAS IERAKSTA KARTAS NUMURS - '.$key.'</div>';
+			echo '<div> CRUISE - '.$key.'</div>';
 			foreach ($value as $key => $value) {
 				echo '<div>'.$key.'->'.$value.'</div>';
 			}

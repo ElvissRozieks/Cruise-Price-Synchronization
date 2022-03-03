@@ -162,7 +162,7 @@ class Cruise_Price {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'cruise_price_admin_sub_menu' ); // Sub pages
 
 		//register setting fields
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_cruise_price_setting_fields' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_cruise_setting_fields' );
 	
 		// Create CPT to hold greenhouse board data
 		$this->loader->add_action( 'init', $plugin_admin, 'cruise_price_list_cpt' );

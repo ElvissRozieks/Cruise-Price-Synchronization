@@ -132,7 +132,7 @@ class Cruise_Price_Admin {
 			"Home", // $menu_title:string
 			"manage_options", // $capability:string
 			"{$this->plugin_name}/welcome.php", // $menu_slug:string
-			array($this, 'cruise-price_welcome'), // $function:callable
+			array($this, 'cruise_price_welcome'), // $function:callable
 		);
 
 		// Sub menu - api_settings
@@ -142,7 +142,17 @@ class Cruise_Price_Admin {
 			"API Settings", // $menu_title:string
 			"manage_options", // $capability:string
 			"{$this->plugin_name}/api_settings.php", // $menu_slug:string
-			array($this, 'class-cruise_setting_page'), // $function:callable
+			array($this, 'cruise_price_api_setting_page'), // $function:callable
+		);
+
+		// Sub menu - api_settings
+		add_submenu_page( 
+			$this->plugin_name, // $parent_slug:string
+			"Cruise Test View", // $page_title:string
+			"Test View", // $menu_title:string
+			"manage_options", // $capability:string
+			"{$this->plugin_name}/test_view.php", // $menu_slug:string
+			array($this, 'cruise_price_test_view'), // $function:callable
 		);
 
 
@@ -167,9 +177,15 @@ class Cruise_Price_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function greenhouse_api_setting_page() {
+	public function cruise_price_api_setting_page() {
 
 		return $this->template_load('api_settings');
+
+	}
+
+	public function cruise_price_test_view() {
+
+		return $this->template_load('test_view');
 
 	}
 

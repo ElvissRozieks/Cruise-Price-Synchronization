@@ -18,9 +18,9 @@ use cruise\includes\api\importer\Cruise_Price_importer as Importer;
  * @package    Cruise_Price
  * @subpackage Cruise_Price/includes
  */
-class Cruise_Price_job_board extends Cruise_Price_service{
+class Cruise_Price_travel_board extends Cruise_Price_service{
     
-    private static string $board_cpt = 'apply';
+    private static string $board_cpt = 'cruises';
 
     public function __construct($board_token) {
 
@@ -40,6 +40,7 @@ class Cruise_Price_job_board extends Cruise_Price_service{
     private function getJobBoardApiData() : array {
 
         $get_data = $this->getApiService()->getJobApiService()->getJobs(true);
+        var_dump($get_data);
         $data_json = json_decode($get_data);
         $data_object = $data_json->jobs;
 

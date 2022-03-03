@@ -17,8 +17,8 @@
     <h1>API settings</h1>
     <form method="post" action="options.php">
         <?php
-            settings_fields( 'cruise-price_setting_fields' );
-            do_settings_sections( 'cruise-price_setting_fields' );
+            settings_fields( 'cruise_setting_fields' );
+            do_settings_sections( 'cruise_setting_fields' );
         ?>
         <table class="form-table">
             <tbody>

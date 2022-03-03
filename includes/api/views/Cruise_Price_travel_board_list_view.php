@@ -11,7 +11,8 @@ namespace cruise\includes\api\views;
  * @package    Cruise_Price
  * @subpackage Cruise_Price/includes
  */
-class Cruise_Price_travel_borard_list_view{
+
+class Cruise_Price_travel_board_list_view{
     
     private array $view_data;
 
@@ -33,87 +34,7 @@ class Cruise_Price_travel_borard_list_view{
 
     private function listViewItem($data) : string {
 
-        /*
-            // Object Data
-            $data->absolute_url; // string
-            $data->data_compliance // array
-            $data->internal_job_id // string jobID
-            $data->location->name // string 'Remote'
-            $data->id // string Board ID
-            $data->updated_at // string created AT
-            $data->requisition_id // requisition_id
-            $data->title // string Title
-
-            // Array Collection
-            $data->location->metadata // array 
-
-            // What can be get from array
-            $data->location->metadata[0]['id'] // Internal JOB ID
-            $data->location->metadata[0]['name'] //Employment Type
-            $data->location->metadata[0]['value'] //value Full-time
-            $data->location->metadata[0]['value_type'] //value single_select
-            $data->location->metadata[1]['id'] // JOB TYPE ID
-            $data->location->metadata[1]['name'] // JOB TYPE Type of job
-            $data->location->metadata[1]['value'] // null , hmm
-            $data->location->metadata[1]['value_type'] //value single_select
-        */
-
-        // List Item Blocks
-            // Convert Date
-            $updatedDate = date("Y-m-d", strtotime($data->boardUpdate));
-            $postedDate = date("F j, Y", strtotime($data->boardUpdate));
-
-            // listViewItem Starting Point
-            $listViewItemStart = "<li id='{$data->id}' class='post-15809 job_listing type-job_listing status-publish hentry'>";
-
-            // listViewItem Body Part
-            $listViewItemImage = "<img class='company_logo' src='#!' alt='Logo'>";
-
-            // listViewItem Position Information
-            $listViewItemPosition = "
-                <div class='position'>
-
-                    <h3>{$data->post_title}</h3>
-
-                    <div class='company'>
-                        <strong>DistantJob</strong>
-                        <span class='tagline'>Remote Recruitment Agency</span>
-                    </div>
-
-                </div>";
-
-            // listViewItem Location Information
-            $listViewItemLocation = "
-                <div class='location'>
-                    {$data->location}
-                </div> ";
-
-            // listViewItem Meta Information
-            $listViewItemMeta = "
-                <ul class='meta'>
-                                                                    
-                    <li class='date'>
-                        <time datetime='{$updatedDate}'>Posted on {$postedDate}</time>
-                    </li>
-
-                </ul>";
-
-            // listViewItem End Point
-            $listViewItemEnd = "</li>";
-        // List Item Blocks
-
-        // List Item Builder
-        $listViewItemBody = "
-            {$listViewItemStart}
-                <a href='{$data->guid}'>
-                    {$listViewItemPosition}
-                    {$listViewItemLocation}
-                    {$listViewItemMeta}
-                </a>
-            {$listViewItemEnd}";
-
-
-        return $listViewItemBody;
+        return '<h2>'.$data->post_title.'</h2> ---- ';
 
     }
 

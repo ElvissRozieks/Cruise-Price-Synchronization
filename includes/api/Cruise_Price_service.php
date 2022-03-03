@@ -4,7 +4,7 @@ namespace cruise\includes\api;
 
 // Class includes
 include_once plugin_dir_path( dirname( __FILE__ ) ) . 'api/configuration/Cruise_Price_api_connection.php';
-include_once plugin_dir_path( dirname( __FILE__ ) ) . 'api/harvest_partials/Cruise_Price_travel_board.php';
+include_once plugin_dir_path( dirname( __FILE__ ) ) . 'api/api_partials/Cruise_Price_travel_board.php';
 
 /**
  * Fired during plugin activation.

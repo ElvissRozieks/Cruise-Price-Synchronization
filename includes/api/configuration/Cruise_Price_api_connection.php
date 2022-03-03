@@ -2,8 +2,6 @@
 
 namespace cruise\includes\api\configuration;
 
-use cruise\GreenhouseToolsPhp\GreenhouseService;
-use cruise\GreenhouseToolsPhp\Tools\JsonHelper;
 use cruise\includes\api\Cruise_Price_service;
 /**
  * API CONFIGURATION CALL
@@ -41,10 +39,6 @@ class Cruise_Price_api_connection{
 	// Class Construct
 	public function __construct($api,$board) {
 		$this->fields = array();
-		$this->greenhouseService = new GreenhouseService([
-			'apiKey' => $api, 
-			'boardToken' => $board 
-		]);
 	}
 
 	public function getGreenHouseService() {

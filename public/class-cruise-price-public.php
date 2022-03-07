@@ -5,7 +5,7 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cru
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Tags_Importer.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Types_Importer.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Schedule_Importer.php';
-//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Price_Importer.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Price_Importer.php';
 
 /*ini_set('display_errors', 1);
 nii_set('display_startup_errors', 1);
@@ -17,7 +17,7 @@ use cruise\includes\api\importer\Cruise_Durations_Importer as DurationsImporter;
 use cruise\includes\api\importer\Cruise_Tags_Importer as TagsImporter;
 use cruise\includes\api\importer\Cruise_Types_Importer as TypesImporter;
 use cruise\includes\api\importer\Cruise_Schedule_Importer as ScheduleImporter;
-//use cruise\includes\api\importer\Cruise_Price_Importer as PriceImporter;
+use cruise\includes\api\importer\Cruise_Price_Importer as PriceImporter;
 /**
  * The public-facing functionality of the plugin.
  *

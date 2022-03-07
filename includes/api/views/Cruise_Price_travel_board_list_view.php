@@ -22,13 +22,14 @@ class Cruise_Price_travel_board_list_view{
 
     private function listViewBody() : string {
 
-        foreach($this->view_data as $item){
+        /*foreach($this->view_data as $item){
             $this->list[] = $this->listViewItem($item);
         }
 
         $this->list = implode(" ", $this->list);
         
-        return $this->list; 
+        return $this->list; */ 
+        return 'asd';
 
     }
 

@@ -297,6 +297,7 @@ class Cruise_Price_Admin {
             'show_in_rest'        => true,
             'capability_type'     => 'post',
             'menu_icon'           => 'dashicons-cart',
+			'taxonomy'			  => array('brandstype', 'brandstypes', 'brandstypess'),
 			'rewrite'			  => array('slug' => '/cruises', 'with_front' => false )
         );
 
@@ -304,6 +305,84 @@ class Cruise_Price_Admin {
         register_post_type( 'cruises', $args );
 
 	}
+
+	// Gallery Brand Type
+
+		function create_brandtype_hierarchical_taxonomy() {
+			$labels = array(
+				'name'				=> _x( 'Cruise Tags', 'taxonomy general name' ),
+				'singular_name'		=> _x( 'Cruise Tags', 'taxonomy singular name' ),
+				'search_items'		=> __( 'Search Brand Type' ),
+				'all_items'			=> __( 'All Brand Type' ),
+				'parent_item'		=> __( 'Parent Brand Type' ),
+				'parent_item_colon' => __( 'Parent Brand Type:' ),
+				'edit_item'			=> __( 'Edit Brand Type' ),
+				'update_item'		=> __( 'Update Brand Type' ),
+				'add_new_item'		=> __( 'Add New Brand Type' ),
+				'new_item_name'		=> __( 'New Brand Type Name' ),
+				'menu_name'			=> __( 'Cruise Tags' ),
+			);
+			register_taxonomy('brandstype',array('cruises'), array(
+					'hierarchical'		=> true,
+					'labels'			=> $labels,
+					'show_ui'			=> true,
+					'show_admin_column'	=> true,
+					'query_var'			=> true,
+				));
+		}
+		// Gallery Brand Type
+
+			// Gallery Brand Type
+			
+			function create_brandtype_hierarchical_taxonomys() {
+				$labels = array(
+					'name'				=> _x( 'Cabine Types', 'taxonomy general name' ),
+					'singular_name'		=> _x( 'Cabine Types', 'taxonomy singular name' ),
+					'search_items'		=> __( 'Search Brand Type' ),
+					'all_items'			=> __( 'All Brand Type' ),
+					'parent_item'		=> __( 'Parent Brand Type' ),
+					'parent_item_colon' => __( 'Parent Brand Type:' ),
+					'edit_item'			=> __( 'Edit Brand Type' ),
+					'update_item'		=> __( 'Update Brand Type' ),
+					'add_new_item'		=> __( 'Add New Brand Type' ),
+					'new_item_name'		=> __( 'New Brand Type Name' ),
+					'menu_name'			=> __( 'Cabine Types' ),
+				);
+				register_taxonomy('brandstypes',array('cruises'), array(
+						'hierarchical'		=> true,
+						'labels'			=> $labels,
+						'show_ui'			=> true,
+						'show_admin_column'	=> true,
+						'query_var'			=> true,
+					));
+			}
+			// Gallery Brand Type
+
+				// Gallery Brand Type
+			
+				function create_brandtype_hierarchical_taxonomysx() {
+					$labels = array(
+						'name'				=> _x( 'Cruise durations', 'taxonomy general name' ),
+						'singular_name'		=> _x( 'Cruise durations', 'taxonomy singular name' ),
+						'search_items'		=> __( 'Search Brand Type' ),
+						'all_items'			=> __( 'All Brand Type' ),
+						'parent_item'		=> __( 'Parent Brand Type' ),
+						'parent_item_colon' => __( 'Parent Brand Type:' ),
+						'edit_item'			=> __( 'Edit Brand Type' ),
+						'update_item'		=> __( 'Update Brand Type' ),
+						'add_new_item'		=> __( 'Add New Brand Type' ),
+						'new_item_name'		=> __( 'New Brand Type Name' ),
+						'menu_name'			=> __( 'Cruise durations' ),
+					);
+					register_taxonomy('brandstypess',array('cruises'), array(
+							'hierarchical'		=> true,
+							'labels'			=> $labels,
+							'show_ui'			=> true,
+							'show_admin_column'	=> true,
+							'query_var'			=> true,
+						));
+				}
+				// Gallery Brand Type
 
 	private function cruise_board_call($board){
 

@@ -1,6 +1,11 @@
 <?php
 
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/Cruise_Price_service.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Durations_Importer.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Tags_Importer.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Types_Importer.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Schedule_Importer.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Price_Importer.php';
 
 /*ini_set('display_errors', 1);
 nii_set('display_startup_errors', 1);
@@ -8,7 +13,11 @@ error_reporting(E_ALL);*/
 
 use cruise\includes\api\Cruise_Price_service as BoardHarvester;
 use cruise\includes\api\api_partials\Cruise_Price_travel_board as TravelBoard;
-
+use cruise\includes\api\importer\Cruise_Durations_Importer as DurationsImporter;
+use cruise\includes\api\importer\Cruise_Tags_Importer as TagsImporter;
+use cruise\includes\api\importer\Cruise_Types_Importer as TypesImporter;
+use cruise\includes\api\importer\Cruise_Schedule_Importer as ScheduleImporter;
+use cruise\includes\api\importer\Cruise_Price_Importer as PriceImporter;
 /**
  * The public-facing functionality of the plugin.
  *
@@ -70,7 +79,7 @@ class Cruise_Price_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		$this->board = 'distantjob';
+		$this->board = 'cruiser';
 
 	}
 
@@ -117,24 +126,96 @@ class Cruise_Price_Public {
 		//$up_dir = plugin_dir_path();
 		$read = plugin_dir_path(__DIR__) . 'uploads';
 		//$this->harvest_service_import_test_zip($url,$up_dir['basedir']);
-		$this->harvest_service_read_zip($read,'flatfile_lva_air.json');
+		$this->harvest_service_read_zip($read,'flatfile_lva_air.json','duration');
 	}
 
 	function harvest_service_read_zip( $read, $filename ){
 		$strJsonFileContents = file_get_contents($read.'/'.$filename);
 		$strJsonFileContentsJson = json_decode($strJsonFileContents, true);
-		foreach($strJsonFileContentsJson as $key => $value) {
+		$nightsList = [];
+		$column = 'nights';
+		/*foreach($strJsonFileContentsJson as $key => $value) {
 			echo '----';
 			echo '<br>';
 			echo '<div> CRUISE - '.$key.'</div>';
 			foreach ($value as $key => $value) {
-				echo '<div>'.$key.'->'.$value.'</div>';
+				echo '<pre>';
+					var_dump($key);
+				echo '</pre>';
+				echo '------------';
+				echo '<pre>';
+					var_dump($value);
+				echo '</pre>';
+				// echo '<div>'.$key.'->'.$value.'</div>';
 			}
 			echo '<br>';
 			echo '----';
+		}*/
+		
+		foreach ($strJsonFileContentsJson as $key => $value) {
+			foreach ($value as $key => $value) {
+				if($key == $column) {
+					$nightsList[] = $value + 1;
+				}
+			}
+        }
+
+		$bookTerms =[];
+		
+		$terms = get_terms( array(
+			'taxonomy' => 'brandstypess',
+			'hide_empty' => false,
+		) );
+
+		// var_dump($terms);
+
+		foreach ($terms as $term) {
+			$parentTerm = $term->parent;
+			/*
+			 * if the term has a parent
+			 *
+			*/
+			if(!empty($term->parent) && $term->parent!=0) {
+				$parentTermArray = get_term_by('id', $term->parent, 'cruise');
+				$parentTerm = $parentTermArray->parent;
+			}
+
+			$bookTerms[] =[
+				'slug'=> $term->slug,
+				'name'=>$term->name,
+				'term_id'=>$term->term_id,
+				'parent_term_id'=> $parentTerm
+			];
+		};
+		
+		if(isset($_GET['import'])) {
+			$import = $_GET['import'];
+			if($import == 'duration'){
+				new DurationsImporter();
+			}
+			if($import == 'tags'){
+				new TagsImporter();
+			}
+			if($import == 'types'){
+				new TypesImporter();
+			}
+			if($import == 'cruises'){
+				new PriceImporter();
+			}
+			if($import == 'sched'){
+				new ScheduleImporter();
+			}
 		}
+
+		/*echo '<pre>';
+			var_dump(array_unique($nightsList));
+		echo '</pre>';
+		echo '<pre>';
+			var_dump($bookTerms);
+		echo '</pre>'; */
+        return array_unique($nightsList);
 		//var_dump($strJsonFileContentsJson[0]->cruiseID);
-		return $strJsonFileContents;
+		// return $strJsonFileContents;
 	}
 
 	function harvest_service_import_test_zip( $url, $dir ){

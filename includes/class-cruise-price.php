@@ -167,6 +167,10 @@ class Cruise_Price {
 		// Create CPT to hold greenhouse board data
 		$this->loader->add_action( 'init', $plugin_admin, 'cruise_price_list_cpt' );
 
+		$this->loader->add_action( 'init', $plugin_admin, 'create_brandtype_hierarchical_taxonomy', 0 );
+		$this->loader->add_action( 'init', $plugin_admin, 'create_brandtype_hierarchical_taxonomys', 1 );
+		$this->loader->add_action( 'init', $plugin_admin, 'create_brandtype_hierarchical_taxonomysx', 2 );
+
 		// Add cron job
 		$this->loader->add_action('travel_board_cron_updater' , $plugin_admin, 'travel_board_cron_updater');
 	}

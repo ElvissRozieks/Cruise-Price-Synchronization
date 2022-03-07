@@ -298,7 +298,7 @@ class Cruise_Price_Admin {
             'show_in_rest'        => true,
             'capability_type'     => 'post',
             'menu_icon'           => 'dashicons-cart',
-			'taxonomy'			  => array('cruise_tags', 'cruise_types', 'cruise_durations'),
+			'taxonomy'			  => array('cruise_tags', 'cruise_types', 'cruise_duration'),
 			'rewrite'			  => array('slug' => '/cruises', 'with_front' => false )
         );
 

@@ -2,7 +2,7 @@
 
 namespace cruise\includes\api\importer;
 
-require_once ABSPATH . WPINC . '/class-wp-http.php';
+// require_once ABSPATH . WPINC . '/class-wp-http.php';
 
 
 //svar_dump(ABSPATH . WPINC . '/class-http.php');

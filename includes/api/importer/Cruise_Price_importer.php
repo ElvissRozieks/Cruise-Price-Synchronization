@@ -128,6 +128,9 @@ class Cruise_Price_Importer {
     private function importRecordData($single_import_array,$single_data_builder) : ? string {
 
         $import_result = wp_insert_post($single_import_array);
+        echo '<pre>';
+        var_dump($import_result);
+        echo '</pre>';
         if ( $import_result && !is_wp_error( $import_result ) ) {
             
             $import_ID = $import_result;

@@ -298,11 +298,11 @@ class Cruise_Price_Admin {
             'capability_type'     => 'post',
             'menu_icon'           => 'dashicons-cart',
 			'taxonomy'			  => array('brandstype', 'brandstypes', 'brandstypess'),
-			'rewrite'			  => array('slug' => '/cruises', 'with_front' => false )
+			'rewrite'			  => array('slug' => '/cruise', 'with_front' => false )
         );
 
 		// Register Cruise Post Type
-        register_post_type( 'cruises', $args );
+        register_post_type( 'cruise', $args );
 
 	}
 
@@ -322,7 +322,7 @@ class Cruise_Price_Admin {
 				'new_item_name'		=> __( 'New Brand Type Name' ),
 				'menu_name'			=> __( 'Cruise Tags' ),
 			);
-			register_taxonomy('brandstype',array('cruises'), array(
+			register_taxonomy('cruise_tag',array('cruise'), array(
 					'hierarchical'		=> true,
 					'labels'			=> $labels,
 					'show_ui'			=> true,
@@ -348,7 +348,7 @@ class Cruise_Price_Admin {
 					'new_item_name'		=> __( 'New Brand Type Name' ),
 					'menu_name'			=> __( 'Cabine Types' ),
 				);
-				register_taxonomy('brandstypes',array('cruises'), array(
+				register_taxonomy('cruise_type',array('cruise'), array(
 						'hierarchical'		=> true,
 						'labels'			=> $labels,
 						'show_ui'			=> true,
@@ -374,7 +374,7 @@ class Cruise_Price_Admin {
 						'new_item_name'		=> __( 'New Brand Type Name' ),
 						'menu_name'			=> __( 'Cruise durations' ),
 					);
-					register_taxonomy('brandstypess',array('cruises'), array(
+					register_taxonomy('cruise_duration',array('cruise'), array(
 							'hierarchical'		=> true,
 							'labels'			=> $labels,
 							'show_ui'			=> true,

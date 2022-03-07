@@ -15,8 +15,8 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Read
 class Cruise_Tags_Importer {
     
     private array $tags_list;
-    private static string $board_cpt = 'cruises';
-    private static string $board_taxanomy = 'brandstype';
+    private static string $board_cpt = 'cruise';
+    private static string $board_taxanomy = 'cruise_tag';
     private static array $column = ['DEP-NAME-PORT','ITIN-CD'];
     private static int $termID = 5;
     private static string $import_data = 'itinff_lva_eng.json';
@@ -64,12 +64,18 @@ class Cruise_Tags_Importer {
 
     private function SingleImportDataSort($data_items) : array {
         $counts = 0;
+        $disable_name = [];
         foreach ($data_items as $data_item) {
-			foreach ($data_item as $key => $value) {
-				if(in_array($key, self::$column)) {
-					$this->tags_list[$counts][$key] = $value;
-				}
-			}
+            if(!in_array($data_item['DEP-NAME-PORT'], $disable_name)){
+                foreach ($data_item as $key => $value) {
+                    if(in_array($key, self::$column)) {
+                        $this->tags_list[$counts][$key] = $value;
+                        if($key == 'DEP-NAME-PORT') {
+                            $disable_name[] = $value;
+                        }
+                    }
+                }
+            }
             $counts++;
         }
 

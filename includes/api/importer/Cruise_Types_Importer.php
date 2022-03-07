@@ -15,8 +15,8 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Read
 class Cruise_Types_Importer {
     
     private array $tags_list;
-    private static string $board_cpt = 'cruises';
-    private static string $board_taxanomy = 'brandstypes';
+    private static string $board_cpt = 'cruise';
+    private static string $board_taxanomy = 'cruise_type';
     private static array $column = ['fareCode','itemDescription','category'];
     private static int $termID = 5;
     private static string $import_data = 'flatfile_lva_items.json';
@@ -55,7 +55,10 @@ class Cruise_Types_Importer {
             'name'=> $single_data_builder['itemDescription'],
             'description' => $single_data_builder['itemDescription'],
             'term_id'=> self::$termID,
-            'parent_term_id'=> $parentID
+            'parent_term_id'=> $parentID,
+            'meta_input' => array(
+                'cabin_type_max_count' => 6,
+            )
         ];
         
         $this->importRecordData($durationTerms,$single_data_builder);
@@ -103,7 +106,7 @@ class Cruise_Types_Importer {
                 $single_data_builder['itemDescription'],   // the term 
                 self::$board_taxanomy, // the taxonomy
                 array(
-                    'description' => $single_data_builder['itemDescription'],
+                    'description' => $single_data_builder['fareCode'].'-'.$single_data_builder['category'],
                     'slug'        => $single_data_builder['fareCode'].'-'.$single_data_builder['category'],
                     'parent'      => 0,
                 )

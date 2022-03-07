@@ -19,7 +19,7 @@ require_once ABSPATH . WPINC . '/class-wp-http.php';
 class Cruise_Price_Importer {
     
     private array $cruiser_list;
-    private static string $board_cpt = 'cruises';
+    private static string $board_cpt = 'cruise';
     private static string $board_taxanomy = 'brandstype';
     private static array $column = ['nights','itinCd','DEP-NAME-PORT','fareCode','category','itinDesc'];
     private static int $termID = 5;
@@ -61,13 +61,25 @@ class Cruise_Price_Importer {
             $single_data_builder['content'] = 'No Content'; 
         }
 
+        $description = `
+        <i class="material-icons">business</i><a href="/cruise-tag/msc-cruises">MSC CRUISES</a>
+        <i class="material-icons">directions_boat </i><a href="/cruise-tag/msc-divina">MSC DIVINA</a>
+        `;
+
         $single_import_array = array(
 			'post_title' => $single_data_builder['nights'] + 1 .' nights, '. $single_data_builder['itinDesc'],
 			'post_content' => html_entity_decode($single_data_builder['content']),
 			'post_category' => array('uncategorized'),
 			'post_status' => 'publish',
+            'cats' => $single_data_builder['category'],
             'post_slug'  => $single_data_builder['itinCd'],
-			'post_type' => self::$board_cpt
+            'fareCode' => $single_data_builder['fareCode'],
+            'nights' => $single_data_builder['nights'],
+			'post_type' => self::$board_cpt,
+            'meta_input' => array(
+                'cruise_address' => $single_data_builder['itinDesc'],
+                'cruise_short_description' => $description
+            )
 		);
 
         $this->importRecordData($single_import_array,$single_data_builder);
@@ -111,7 +123,6 @@ class Cruise_Price_Importer {
         }
 
         return true;
-
     }
 
     private function importRecordData($single_import_array,$single_data_builder) : ? string {
@@ -122,6 +133,44 @@ class Cruise_Price_Importer {
             $import_ID = $import_result;
             // $this->wp_insert_attachment_from_url('https://cruiselines.lv/wp-content/uploads/2021/11/seashore-schiffsansicht.8uhyzp71-174-400x300.jpg',$import_ID);
             // $this->importerMetaFields($import_ID,$single_data_builder);
+            $taxonomy1 = 'cruise_tag';
+            $taxonomy2 = 'cruise_type';
+            $taxonomy3 = 'cruise_duration';
+            
+            $terms1 = get_terms( array(
+                'taxonomy' => $taxonomy1,
+                'hide_empty' => false,
+            ));
+            $terms2 = get_terms( array(
+                'taxonomy' => $taxonomy2,
+                'hide_empty' => false,
+            ));
+            $terms3 = get_terms( array(
+                'taxonomy' => $taxonomy3,
+                'hide_empty' => false,
+            ));
+
+            foreach($terms1 as $term) {
+                if($term->description == $single_import_array['post_slug']) {
+                    $termObj = get_term_by( 'id', $term->term_id, $taxonomy1);
+                    wp_set_object_terms($import_ID, $termObj->slug, $taxonomy1, true);
+                }
+            }
+
+            foreach($terms2 as $term) {
+                if($term->description == $single_import_array['fareCode'].'-'.$single_import_array['cats']) {
+                    $termObj = get_term_by( 'id', $term->term_id, $taxonomy2);
+                    wp_set_object_terms($import_ID, $termObj->slug, $taxonomy2, true);
+                }
+            }
+
+            foreach($terms3 as $term) {
+                if($term->description == $single_import_array['nights'] + 1) {
+                    $termObj = get_term_by( 'id', $term->term_id, $taxonomy3);
+                    wp_set_object_terms($import_ID, $termObj->slug, $taxonomy3, true);
+                    break;
+                }
+            }
 
             return null;
     

@@ -169,12 +169,9 @@ class Cruise_Price_Public {
 
 		// var_dump($terms);
 
-		foreach ($terms as $term) {
+		/* foreach ($terms as $term) {
 			$parentTerm = $term->parent;
-			/*
-			 * if the term has a parent
-			 *
-			*/
+			
 			if(!empty($term->parent) && $term->parent!=0) {
 				$parentTermArray = get_term_by('id', $term->parent, 'cruise');
 				$parentTerm = $parentTermArray->parent;
@@ -186,7 +183,7 @@ class Cruise_Price_Public {
 				'term_id'=>$term->term_id,
 				'parent_term_id'=> $parentTerm
 			];
-		};
+		}; */
 		
 		if(isset($_GET['import'])) {
 			$import = $_GET['import'];
@@ -213,7 +210,7 @@ class Cruise_Price_Public {
 		echo '<pre>';
 			var_dump($bookTerms);
 		echo '</pre>'; */
-        return array_unique($nightsList);
+        return ['asd','asd'];
 		//var_dump($strJsonFileContentsJson[0]->cruiseID);
 		// return $strJsonFileContents;
 	}
@@ -242,7 +239,7 @@ class Cruise_Price_Public {
 		curl_close($ch_start);
 */
 		$zip = new ZipArchive;
-		var_dump($zip);
+		//var_dump($zip);
 		$extractPath = $dir;
 		if($zip->open($zipFile) != "true")
 		{

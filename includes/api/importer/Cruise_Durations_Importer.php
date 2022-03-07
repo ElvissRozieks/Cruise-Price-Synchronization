@@ -17,8 +17,8 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Read
 class Cruise_Durations_Importer {
     
     private array $night_list;
-    private static string $board_cpt = 'cruises';
-    private static string $board_taxanomy = 'brandstypess';
+    private static string $board_cpt = 'cruise';
+    private static string $board_taxanomy = 'cruise_duration';
     private static string $column = 'nights';
     private static int $termID = 5;
     private static string $import_data = 'flatfile_lva_air.json';

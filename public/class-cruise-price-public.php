@@ -4,8 +4,8 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/Cruise_Price
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Durations_Importer.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Tags_Importer.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Types_Importer.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_List_Importer.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Schedule_Importer.php';
-require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/api/importer/Cruise_Price_Importer.php';
 
 /*ini_set('display_errors', 1);
 nii_set('display_startup_errors', 1);
@@ -16,8 +16,8 @@ use cruise\includes\api\api_partials\Cruise_Price_travel_board as TravelBoard;
 use cruise\includes\api\importer\Cruise_Durations_Importer as DurationsImporter;
 use cruise\includes\api\importer\Cruise_Tags_Importer as TagsImporter;
 use cruise\includes\api\importer\Cruise_Types_Importer as TypesImporter;
+use cruise\includes\api\importer\Cruise_List_Importer as ListImporter;
 use cruise\includes\api\importer\Cruise_Schedule_Importer as ScheduleImporter;
-use cruise\includes\api\importer\Cruise_Price_Importer as PriceImporter;
 /**
  * The public-facing functionality of the plugin.
  *
@@ -198,7 +198,7 @@ class Cruise_Price_Public {
 				new TypesImporter();
 			}
 			if($import == 'cruises'){
-				new PriceImporter();
+				new ListImporter();
 			}
 			if($import == 'sched'){
 				new ScheduleImporter();

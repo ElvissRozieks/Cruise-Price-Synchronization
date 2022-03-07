@@ -1,11 +1,8 @@
 <?php
 
 namespace cruise\includes\api\importer;
+
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Reader.php';
-// require_once ABSPATH . WPINC . '/class-wp-http.php';
-
-
-//svar_dump(ABSPATH . WPINC . '/class-http.php');
 
 /**
  * Fired during plugin activation.
@@ -16,7 +13,7 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Read
  * @package    Cruise_Price
  * @subpackage Cruise_Price/includes
  */
-class Cruise_Price_Importer {
+class Cruise_List_Importer {
     
     private array $cruiser_list;
     private static string $board_cpt = 'cruise';

@@ -3,11 +3,11 @@
 namespace cruise\includes\api\api_partials;
 
 include_once plugin_dir_path( dirname( __FILE__ ) ) . 'views/Cruise_Price_travel_board_list_view.php';
-include_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_Price_importer.php';
+//include_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_List_Importer.php';
 
 use cruise\includes\api\Cruise_Price_service;
 use cruise\includes\api\views\Cruise_Price_travel_board_list_view as ListViewRender;
-use cruise\includes\api\importer\Cruise_Price_importer as Importer;
+//use cruise\includes\api\importer\Cruise_List_Importer as ListImporter;
 
 /**
  * Fired during plugin activation.

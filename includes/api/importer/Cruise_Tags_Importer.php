@@ -64,9 +64,9 @@ class Cruise_Tags_Importer {
 
     private function SingleImportDataSort($data_items) : array {
         $counts = 0;
-        $disable_name = [];
+        //$disable_name = [];
         foreach ($data_items as $data_item) {
-            if(!in_array($data_item['DEP-NAME-PORT'], $disable_name)){
+            //if(!in_array($data_item['DEP-NAME-PORT'], $disable_name)){
                 foreach ($data_item as $key => $value) {
                     if(in_array($key, self::$column)) {
                         $this->tags_list[$counts][$key] = $value;
@@ -75,7 +75,7 @@ class Cruise_Tags_Importer {
                         }
                     }
                 }
-            }
+            //}
             $counts++;
         }
 

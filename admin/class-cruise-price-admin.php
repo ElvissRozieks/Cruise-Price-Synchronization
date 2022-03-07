@@ -323,7 +323,7 @@ class Cruise_Price_Admin {
 				'new_item_name'		=> __( 'New Brand Type Name' ),
 				'menu_name'			=> __( 'Cruise Tags' ),
 			);
-			register_taxonomy('cruise_tags',array('cruise'), array(
+			register_taxonomy('cruise_tags',array('cruises'), array(
 					'hierarchical'		=> true,
 					'labels'			=> $labels,
 					'show_ui'			=> true,
@@ -349,7 +349,7 @@ class Cruise_Price_Admin {
 					'new_item_name'		=> __( 'New Brand Type Name' ),
 					'menu_name'			=> __( 'Cabine Types' ),
 				);
-				register_taxonomy('cruise_types',array('cruise'), array(
+				register_taxonomy('cruise_types',array('cruises'), array(
 						'hierarchical'		=> true,
 						'labels'			=> $labels,
 						'show_ui'			=> true,
@@ -375,7 +375,7 @@ class Cruise_Price_Admin {
 						'new_item_name'		=> __( 'New Brand Type Name' ),
 						'menu_name'			=> __( 'Cruise durations' ),
 					);
-					register_taxonomy('cruise_durations',array('cruise'), array(
+					register_taxonomy('cruise_durations',array('cruises'), array(
 							'hierarchical'		=> true,
 							'labels'			=> $labels,
 							'show_ui'			=> true,

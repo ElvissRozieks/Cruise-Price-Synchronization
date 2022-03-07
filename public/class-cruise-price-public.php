@@ -189,6 +189,7 @@ class Cruise_Price_Public {
 			$import = $_GET['import'];
 			if($import == 'duration'){
 				new DurationsImporter();
+				console.log('Durations Activated');
 			}
 			if($import == 'tags'){
 				new TagsImporter();

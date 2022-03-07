@@ -2,7 +2,6 @@
 
 namespace cruise\includes\api\importer;
 
-
 /**
  * Fired during plugin activation.
  *

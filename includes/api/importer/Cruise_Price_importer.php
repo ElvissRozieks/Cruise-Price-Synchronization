@@ -1,7 +1,7 @@
 <?php
 
 namespace cruise\includes\api\importer;
-
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Reader.php';
 // require_once ABSPATH . WPINC . '/class-wp-http.php';
 
 

@@ -153,25 +153,31 @@ class Cruise_Price_Importer {
                 'hide_empty' => false,
             ));
 
-            foreach($terms1 as $term) {
-                if($term->description == $single_import_array['post_slug']) {
-                    $termObj = get_term_by( 'id', $term->term_id, $taxonomy1);
-                    wp_set_object_terms($import_ID, $termObj->slug, $taxonomy1, true);
+            if(!empty($terms1)) {
+                foreach($terms1 as $term) {
+                    if($term->description == $single_import_array['post_slug']) {
+                        $termObj = get_term_by( 'id', $term->term_id, $taxonomy1);
+                        wp_set_object_terms($import_ID, $termObj->slug, $taxonomy1, true);
+                    }
                 }
             }
 
-            foreach($terms2 as $term) {
-                if($term->description == $single_import_array['fareCode'].'-'.$single_import_array['cats']) {
-                    $termObj = get_term_by( 'id', $term->term_id, $taxonomy2);
-                    wp_set_object_terms($import_ID, $termObj->slug, $taxonomy2, true);
+            if(!empty($terms2)) {
+                foreach($terms2 as $term) {
+                    if($term->description == $single_import_array['fareCode'].'-'.$single_import_array['cats']) {
+                        $termObj = get_term_by( 'id', $term->term_id, $taxonomy2);
+                        wp_set_object_terms($import_ID, $termObj->slug, $taxonomy2, true);
+                    }
                 }
             }
 
-            foreach($terms3 as $term) {
-                if($term->description == $single_import_array['nights'] + 1) {
-                    $termObj = get_term_by( 'id', $term->term_id, $taxonomy3);
-                    wp_set_object_terms($import_ID, $termObj->slug, $taxonomy3, true);
-                    break;
+            if(!empty($terms3)) {
+                foreach($terms3 as $term) {
+                    if($term->description == $single_import_array['nights'] + 1) {
+                        $termObj = get_term_by( 'id', $term->term_id, $taxonomy3);
+                        wp_set_object_terms($import_ID, $termObj->slug, $taxonomy3, true);
+                        break;
+                    }
                 }
             }
 

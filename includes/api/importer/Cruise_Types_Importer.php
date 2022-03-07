@@ -16,7 +16,7 @@ class Cruise_Types_Importer {
     
     private array $tags_list;
     private static string $board_cpt = 'cruise';
-    private static string $board_taxanomy = 'cruise_type';
+    private static string $board_taxanomy = 'cabin_type';
     private static array $column = ['fareCode','itemDescription','category'];
     private static int $termID = 5;
     private static string $import_data = 'flatfile_lva_items.json';

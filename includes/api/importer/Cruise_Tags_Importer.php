@@ -33,8 +33,13 @@ class Cruise_Tags_Importer {
         if($this->json_file) {
             $this->checkIfRecordsRemoved();
             $import_data_extracted = $this->SingleImportDataSort($this->json_file->import_data_extracted);
+            $single_import_data = [];
             if(!empty($import_data_extracted)) {
-                foreach($import_data_extracted as $single_import_data) {
+                foreach($import_data_extracted as $key => $value) {
+
+                    $single_import_data['DEP-NAME-PORT'] = $key; 
+                    $single_import_data['ITIN-CD'] = implode(",", $value); 
+
                     $this->importDataBuilder($single_import_data, 0);
                     $this->imported_data++;
                 }
@@ -63,20 +68,22 @@ class Cruise_Tags_Importer {
     }
 
     private function SingleImportDataSort($data_items) : array {
-        $counts = 0;
-        //$disable_name = [];
         foreach ($data_items as $data_item) {
-            //if(!in_array($data_item['DEP-NAME-PORT'], $disable_name)){
-                foreach ($data_item as $key => $value) {
-                    if(in_array($key, self::$column)) {
-                        $this->tags_list[$counts][$key] = $value;
-                        if($key == 'DEP-NAME-PORT') {
-                            $disable_name[] = $value;
+            $current_dep_name = $data_item['DEP-NAME-PORT'];
+            foreach ($data_item as $key => $value) {
+                if (in_array($key, self::$column)) {
+                    if (array_key_exists($current_dep_name, $this->tags_list)) {
+                        if($key != 'DEP-NAME-PORT') {
+                            array_push($this->tags_list[$current_dep_name], $value);
+                        }
+                    }
+                    else {
+                        if($key != 'DEP-NAME-PORT') {
+                            $this->tags_list[$current_dep_name] = array($value);
                         }
                     }
                 }
-            //}
-            $counts++;
+            }
         }
 
         return $this->tags_list;
@@ -94,8 +101,18 @@ class Cruise_Tags_Importer {
     private function checkIfRecordsRemoved() : bool { 
 
         $allposts= get_posts( array('post_type'=>self::$board_cpt,'numberposts'=>-1) );
+
         foreach ($allposts as $eachpost) {
             wp_delete_post( $eachpost->ID, true );
+        }
+
+        $terms = get_terms( array(
+            'taxonomy' => self::$board_taxanomy,
+            'hide_empty' => false,
+        ));
+
+        foreach($terms as $term) {
+            wp_delete_term($term->term_id, self::$board_taxanomy);
         }
 
         return true;
@@ -110,7 +127,7 @@ class Cruise_Tags_Importer {
                 self::$board_taxanomy, // the taxonomy
                 array(
                     'description' => $single_data_builder['ITIN-CD'],
-                    'slug'        => $single_data_builder['DEP-NAME-PORT'].'-'.$single_data_builder['ITIN-CD'],
+                    'slug'        => $single_data_builder['DEP-NAME-PORT'],
                     'parent'      => 0,
                 )
             );

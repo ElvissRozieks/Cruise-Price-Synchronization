@@ -29,7 +29,7 @@ class Cruise_Price_travel_board_list_view{
         $this->list = implode(" ", $this->list);
         
         return $this->list; */ 
-        return 'asd';
+        return 'IMPORTED';
 
     }
 

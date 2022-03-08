@@ -91,6 +91,15 @@ class Cruise_Durations_Importer {
             wp_delete_post( $eachpost->ID, true );
         }
 
+        $terms = get_terms( array(
+            'taxonomy' => self::$board_taxanomy,
+            'hide_empty' => false,
+        ));
+
+        foreach($terms as $term) {
+            wp_delete_term($term->term_id, self::$board_taxanomy);
+        }
+
         return true;
 
     }

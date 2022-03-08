@@ -15,7 +15,7 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Read
 class Cruise_Types_Importer {
     
     private array $tags_list;
-    private static string $board_cpt = 'cruise';
+    private static string $board_cpt = 'cabin_type';
     private static string $board_taxanomy = 'cabin_type';
     private static array $column = ['fareCode','itemDescription','category'];
     private static int $termID = 5;
@@ -51,18 +51,23 @@ class Cruise_Types_Importer {
     }
 
     private function importDataBuilder($single_data_builder, $parentID) : void {
-        $durationTerms = [
-            'name'=> $single_data_builder['itemDescription'],
-            'description' => $single_data_builder['itemDescription'],
-            'term_id'=> self::$termID,
-            'parent_term_id'=> $parentID,
+
+        if(empty($single_data_builder['content'])){
+            $single_data_builder['content'] = 'No Content'; 
+        }
+
+        $single_import_array = array(
+			'post_title' => $single_data_builder['fareCode'] .' - '.$single_data_builder['category'],
+			'post_content' => html_entity_decode($single_data_builder['content']),
+			'post_type' => self::$board_cpt,
+            'post_status' => 'publish',
             'meta_input' => array(
                 'cabin_type_max_count' => 6,
+                'cabin_type_meta' => $single_data_builder['fareCode'].'-'.$single_data_builder['category']
             )
-        ];
-        
-        $this->importRecordData($durationTerms,$single_data_builder);
+		);
 
+        $this->importRecordData($single_import_array,$single_data_builder);
     }
 
     private function SingleImportDataSort($data_items) : array {
@@ -90,7 +95,7 @@ class Cruise_Types_Importer {
 
     private function checkIfRecordsRemoved() : bool { 
 
-        $allposts= get_posts( array('post_type'=>self::$board_cpt,'numberposts'=>-1) );
+        $allposts = get_posts( array('post_type'=>self::$board_cpt,'numberposts'=>-1) );
         foreach ($allposts as $eachpost) {
             wp_delete_post( $eachpost->ID, true );
         }
@@ -100,24 +105,34 @@ class Cruise_Types_Importer {
     }
 
     private function importRecordData($single_import_array,$single_data_builder) : ? string {
-        if(!empty($single_import_array)) {
-            //$slug = `${$single_data_builder['DEP-NAME-PORT']}-${$single_data_builder['ITIN-CD']}`;
-            $insertedTerm = wp_insert_term(
-                $single_data_builder['itemDescription'],   // the term 
-                self::$board_taxanomy, // the taxonomy
-                array(
-                    'description' => $single_data_builder['fareCode'].'-'.$single_data_builder['category'],
-                    'slug'        => $single_data_builder['fareCode'].'-'.$single_data_builder['category'],
-                    'parent'      => 0,
-                )
-            );
-             // $termID = $insertedTerm['term_id'];
 
-            return null;
-     
+        $import_result = wp_insert_post($single_import_array);
+        if ( $import_result && !is_wp_error( $import_result ) ) {
+
+            $this->updateRecordData($import_result,$single_data_builder['itemDescription']);
+    
         }
 
-          return 'Something went wrong ( reset import please ) ' . is_wp_error( );
+        return 'Something went wrong ( reset import please ) ' . is_wp_error( $import_result );
+
+	}
+
+    private function updateRecordData($single_post_id,$single_post_title) : ? bool {
+
+        $update_post = array(
+           'ID' =>  $single_post_id,
+           'post_title' => $single_post_title,
+        );
+
+        $update_result = wp_update_post( $update_post );
+         
+         if ( $update_result && !is_wp_error( $update_result ) ) {
+
+            return null;
+    
+        }
+
+        return 'Something went wrong ( reset import please ) ' . is_wp_error( $update_result );
 
 	}
 

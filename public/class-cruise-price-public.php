@@ -189,7 +189,6 @@ class Cruise_Price_Public {
 			$import = $_GET['import'];
 			if($import == 'duration'){
 				new DurationsImporter();
-				var_dump('Durations Activated');
 			}
 			if($import == 'tags'){
 				new TagsImporter();
@@ -211,7 +210,7 @@ class Cruise_Price_Public {
 		echo '<pre>';
 			var_dump($bookTerms);
 		echo '</pre>'; */
-        return ['asd','asd'];
+        return ['IMPORTED','IMPORTED'];
 		//var_dump($strJsonFileContentsJson[0]->cruiseID);
 		// return $strJsonFileContents;
 	}

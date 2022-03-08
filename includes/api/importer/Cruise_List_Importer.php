@@ -16,17 +16,23 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'importer/Cruise_File_Read
 class Cruise_List_Importer {
     
     private array $cruiser_list;
+    private array $delist_list;
     private static string $board_cpt = 'cruise';
+    private static string $cabin_cpt = 'cabin_type';
+    private static string $location_cpt = 'location';
     private static string $board_taxanomy = 'brandstype';
     private static array $column = ['nights','itinCd','DEP-NAME-PORT','fareCode','category','itinDesc'];
     private static int $termID = 5;
     private static string $import_data = 'flatfile_lva_air.json';
+    private static string $import_data_itin = 'itinff_lva_eng.json';
 
     public function __construct() {
         $this->existing_jobs = array();
         $this->imported_data = 0;
         $this->tags_list = [];
+        $this->delist_list = [];
         $this->json_file = new Cruise_File_Reader(self::$import_data);
+        $this->json_file_itin = new Cruise_File_Reader(self::$import_data_itin);
         $this->importer();
 
     }
@@ -48,8 +54,51 @@ class Cruise_List_Importer {
 
     }
 
-    function getTermsID($termArray,$taxonomy) {
+    public function getTermsID($termArray,$taxonomy) {
         $postTerm = term_exists( $termArray->slug, $taxonomy ); // array is returned if taxonomy is given
+    }
+
+    public function getPostItemsByMetaLoop($postType,$key,$value) {
+        $getPostItemsByMetaData = [];
+
+        $getPostItemsByMetaData_results = get_posts( 
+            array(
+                'post_type' => $postType,
+                'numberposts' => -1,
+                'meta_query' => array(
+                    array(
+                        'key' => $key,
+                        'value' => $value,
+                    )
+                )
+            ) 
+        );
+        
+        foreach ($getPostItemsByMetaData_results as $getPostItemsByMetaData_result) {
+            $getPostItemsByMetaData[] = $getPostItemsByMetaData_result->ID;
+        }
+
+        return $getPostItemsByMetaData;
+
+    }
+
+    public function getPostItemsByMeta($postType,$key,$value,$isArray) {
+
+        if($isArray) {
+            $return_list = [];
+            $disable_list = [];
+            //var_dump($value);
+            foreach ($value as $single_value) {
+                if(!in_array($single_value,$disable_list) && !empty($single_value)) {
+                    $return_list[$single_value] = $this->getPostItemsByMetaLoop($postType,$key,$single_value);
+                    $disable_list[] = $single_value;
+                }
+            }
+
+            return $return_list;
+        }
+
+        return $this->getPostItemsByMetaLoop($postType,$key,$value);
     }
 
     private function importDataBuilder($single_data_builder, $parentID) : void {
@@ -58,13 +107,23 @@ class Cruise_List_Importer {
             $single_data_builder['content'] = 'No Content'; 
         }
 
-        $description = `
+        $cabin_id_list = $this->getPostItemsByMeta(self::$cabin_cpt,'cabin_type_meta',$this->delist_list[$single_data_builder['itinCd']],false);
+
+        $location_code_list = $this->singleImportLocation($this->json_file_itin->import_data_extracted, $single_data_builder['itinCd']);
+
+        $location_id_list = $this->getPostItemsByMeta(self::$location_cpt,'location_country',$location_code_list, false);
+
+        if(!empty($location_id_list)) {
+            var_dump(wp_strip_all_tags($single_data_builder['nights'] + 1 .' nights, '. $single_data_builder['itinDesc']));
+        }
+
+        $description = '
         <i class="material-icons">business</i><a href="/cruise-tag/msc-cruises">MSC CRUISES</a>
         <i class="material-icons">directions_boat </i><a href="/cruise-tag/msc-divina">MSC DIVINA</a>
-        `;
+        ';
 
         $single_import_array = array(
-			'post_title' => $single_data_builder['nights'] + 1 .' nights, '. $single_data_builder['itinDesc'],
+			'post_title' => wp_strip_all_tags($single_data_builder['nights'] + 1 .' nights, '. $single_data_builder['itinDesc']),
 			'post_content' => html_entity_decode($single_data_builder['content']),
 			'post_category' => array('uncategorized'),
 			'post_status' => 'publish',
@@ -75,28 +134,49 @@ class Cruise_List_Importer {
 			'post_type' => self::$board_cpt,
             'meta_input' => array(
                 'cruise_address' => $single_data_builder['itinDesc'],
-                'cruise_short_description' => $description
-            )
+                'cruise_short_description' => $description,
+                'cabin_types' => $cabin_id_list,
+                'locations' => $location_id_list,
+                'cruise_contact_email' => $single_data_builder['itinCd']
+            ) 
 		);
 
         $this->importRecordData($single_import_array,$single_data_builder);
 
     }
 
+    private function singleImportLocation($data_items, $item_itin) : string {
+        $counts = 0;
+        $location_list = '';
+        foreach ($data_items as $data_item) {
+            if($data_item["ITIN-CD"] == $item_itin) {
+                $location_list = $data_item["AREA"]["DEST"];
+            }
+            $counts++;
+        }
+
+        return $location_list;
+    }
+
     private function SingleImportDataSort($data_items) : array {
         $counts = 0;
-        $delist_itin = [];
         foreach ($data_items as $data_item) {
-            if(!in_array($data_item['itinCd'],$delist_itin)) {
+            $fareCode = $data_item['fareCode'];
+            $categorys = $data_item['category'];
+            $itincd = $data_item['itinCd'];
+            if(!array_key_exists($itincd, $this->delist_list)) {
                 foreach ($data_item as $key => $value) {
                     if(in_array($key, self::$column)) {
                         $this->tags_list[$counts][$key] = $value;
                         if($key == 'itinCd') {
-                            $delist_itin[] = $value;
+                            $this->delist_list[$value] = array($fareCode.'-'.$categorys);
                         }
                     }
                 }
 			}
+            else {
+                array_push($this->delist_list[$itincd], $fareCode.'-'.$categorys);
+            }
             $counts++;
         }
 
@@ -125,9 +205,6 @@ class Cruise_List_Importer {
     private function importRecordData($single_import_array,$single_data_builder) : ? string {
 
         $import_result = wp_insert_post($single_import_array);
-        echo '<pre>';
-        var_dump($import_result);
-        echo '</pre>';
         if ( $import_result && !is_wp_error( $import_result ) ) {
             
             $import_ID = $import_result;
@@ -152,7 +229,8 @@ class Cruise_List_Importer {
 
             if(!empty($terms1)) {
                 foreach($terms1 as $term) {
-                    if($term->description == $single_import_array['post_slug']) {
+                    $description = explode(",", $term->description);
+                    if(in_array($single_import_array['post_slug'],$description)) {
                         $termObj = get_term_by( 'id', $term->term_id, $taxonomy1);
                         wp_set_object_terms($import_ID, $termObj->slug, $taxonomy1, true);
                     }
@@ -161,7 +239,7 @@ class Cruise_List_Importer {
 
             if(!empty($terms2)) {
                 foreach($terms2 as $term) {
-                    if($term->description == $single_import_array['fareCode'].'-'.$single_import_array['cats']) {
+                    if($term->slug == 'msc-cruise') {
                         $termObj = get_term_by( 'id', $term->term_id, $taxonomy2);
                         wp_set_object_terms($import_ID, $termObj->slug, $taxonomy2, true);
                     }
@@ -180,29 +258,9 @@ class Cruise_List_Importer {
 
             return null;
     
-          }
-
-        return 'Something went wrong ( reset import please ) ' . is_wp_error( $import_result );
-
-        /*if(!empty($single_import_array)) {
-            //$slug = `${$single_data_builder['DEP-NAME-PORT']}-${$single_data_builder['ITIN-CD']}`;
-            $insertedTerm = wp_insert_term(
-                $single_data_builder['DEP-NAME-PORT'],   // the term 
-                self::$board_taxanomy, // the taxonomy
-                array(
-                    'description' => $single_data_builder['ITIN-CD'],
-                    'slug'        => $single_data_builder['DEP-NAME-PORT'].'-'.$single_data_builder['ITIN-CD'],
-                    'parent'      => 0,
-                )
-            );
-
-            // $termID = $insertedTerm['term_id'];
-
-            return null;
-     
         }
 
-          return 'Something went wrong ( reset import please ) ' . is_wp_error( ); */
+            return 'Something went wrong ( reset import please ) ' . is_wp_error( $import_result );
 
 	}
 
@@ -264,16 +322,8 @@ class Cruise_List_Importer {
 
     private function importerMetaFields($import_ID,$single_data_builder) : void {
 
-        // $termID = $insertedTerm['term_id'];
         update_term_meta($termID, 'id_main_site', $termArray->term_id);
         update_term_meta($termID, 'parent_id_main_site', $termArray->parent_term_id);
-        
-        /*
-        add_post_meta( $import_ID, 'JobID', $single_data_builder->internal_job_id);
-        add_post_meta( $import_ID, 'location', $single_data_builder->location->name);
-        add_post_meta( $import_ID, 'boardID', $single_data_builder->id);
-        add_post_meta( $import_ID, 'boardUpdate', $single_data_builder->updated_at);
-        */
 
     }
   

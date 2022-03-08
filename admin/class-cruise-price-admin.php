@@ -349,7 +349,7 @@ class Cruise_Price_Admin {
 					'new_item_name'		=> __( 'New Brand Type Name' ),
 					'menu_name'			=> __( 'Cabine Types' ),
 				);
-				register_taxonomy('cruise_types',array('cruises'), array(
+				register_taxonomy('cabin_types',array('cruises'), array(
 						'hierarchical'		=> true,
 						'labels'			=> $labels,
 						'show_ui'			=> true,

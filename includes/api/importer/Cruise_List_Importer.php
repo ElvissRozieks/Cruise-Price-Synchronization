@@ -122,8 +122,8 @@ class Cruise_List_Importer {
         <i class="material-icons">directions_boat </i><a href="/cruise-tag/msc-divina">MSC DIVINA</a>
         ';
 
-        $itinDesc = explode(" ", $single_data_builder['itinDesc']);
-        $itinDesc = implode(", ", $array);
+        $itinDesc = explode(",", $single_data_builder['itinDesc']);
+        $itinDesc = implode(", ", $itinDesc);
 
         $single_import_array = array(
 			'post_title' => wp_strip_all_tags($single_data_builder['nights']. ' nights, '. $itinDesc),

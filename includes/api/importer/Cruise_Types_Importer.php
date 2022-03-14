@@ -63,7 +63,7 @@ class Cruise_Types_Importer {
         $cabineMeta = $single_data_builder['fareCode'].'-'.$single_data_builder['category'];
 
         $single_import_array = array(
-			'post_title' => $single_data_builder['fareCode'] .' - '.$single_data_builder['category'],
+			'post_title' => $single_data_builder['itemDescription'],
 			'post_content' => html_entity_decode($single_data_builder['content']),
 			'post_type' => self::$board_cpt,
             'post_status' => 'publish',
@@ -112,13 +112,16 @@ class Cruise_Types_Importer {
 
     private function importRecordData($single_import_array,$single_data_builder) : ? string {
 
-        if($this->isRecordPresentData($single_import_array['meta_input']['cabin_type_meta'])) {
-            $import_result = wp_insert_post($single_import_array);
-            return null;
-        }
+        $isRecordPresent = $this->isRecordPresentData($single_import_array['meta_input']['cabin_type_meta']);
 
-        if ( !$import_result && is_wp_error( $import_result ) ) {
-            return 'Something went wrong ( reset import please ) ' . is_wp_error( $import_result );
+        if($isRecordPresent) {
+            $import_result = wp_insert_post($single_import_array);
+
+            if ( !$import_result && is_wp_error( $import_result ) ) {
+                return 'Something went wrong ( reset import please ) ' . is_wp_error( $import_result );
+            }
+
+            return null;
         }
 
         return null;
@@ -141,7 +144,7 @@ class Cruise_Types_Importer {
             ) 
         );
 
-        if($record_check) {
+        if(empty($record_check)) {
             return true;
         }
 

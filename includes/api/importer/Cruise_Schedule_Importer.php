@@ -107,7 +107,7 @@ class Cruise_Schedule_Importer {
             $getPostId = $this->getPostItemsByMeta(self::$board_cpt,'cruise_contact_email',$single_data_builder['itinCd'],false);
             $cabinSearchString = $single_data_builder['fareCode'].'-'.$single_data_builder['category'];
             $getCabinId = $this->getPostItemsByMeta(self::$cabin_cpt,'cabin_type_meta',$cabinSearchString,false);
-            $price = intval($single_data_builder['twoAdult']) + intval($single_data_builder['gftA']) + intval($single_data_builder['gftA']);
+            $price = intval($single_data_builder['twoAdult']) + intval($single_data_builder['gftA']) * 2 ;
 
             if(!empty($getPostId)) {
                 if(is_array($getCabinId)){

@@ -21,14 +21,17 @@ class Cruise_Types_Importer {
     private static int $termID = 5;
     private static string $import_data = 'flatfile_lva_items.json';
     private static string $import_data_ships = 'flatfile_lva_air.json';
+    private static string $import_data_renames = 'rename_cruise.json';
 
 
     public function __construct() {
         $this->existing_jobs = array();
         $this->imported_data = 0;
         $this->tags_list = [];
+        $this->rename_list = [];
         $this->json_file = new Cruise_File_Reader(self::$import_data);
         $this->json_file_Ships = new Cruise_File_Reader(self::$import_data_ships);
+        $this->json_file_renames = new Cruise_File_Reader(self::$import_data_renames);
         $this->importer();
     }
 
@@ -37,6 +40,7 @@ class Cruise_Types_Importer {
             $this->checkIfRecordsRemoved();
             $import_data_extracted = $this->SingleImportDataSort($this->json_file->import_data_extracted);
             $import_data_extracted_ships = $this->SingleImportDataSort($this->json_file_Ships->import_data_extracted);
+            $this->SingleImportDataRename($this->json_file_renames->import_data_extracted);
             if(!empty($import_data_extracted)) {
                 foreach($import_data_extracted as $single_import_data) {
                     $this->importDataBuilder($single_import_data, 0);
@@ -55,15 +59,15 @@ class Cruise_Types_Importer {
     }
 
     private function importDataBuilder($single_data_builder, $parentID) : void {
-
         if(empty($single_data_builder['content'])){
             $single_data_builder['content'] = 'No Content'; 
         }
-
-        $cabineMeta = $single_data_builder['fareCode'].'-'.$single_data_builder['category'];
+        $category_code = $single_data_builder['category'];
+        $cabineMeta = $single_data_builder['fareCode'].'-'.$category_code;
+        $post_title = $this->rename_list[$category_code];
 
         $single_import_array = array(
-			'post_title' => $single_data_builder['itemDescription'],
+			'post_title' => $post_title,
 			'post_content' => html_entity_decode($single_data_builder['content']),
 			'post_type' => self::$board_cpt,
             'post_status' => 'publish',
@@ -88,6 +92,12 @@ class Cruise_Types_Importer {
         }
 
         return $this->tags_list;
+    }
+    
+    private function SingleImportDataRename($data_items) : void {
+        foreach ($data_items as $data_item) {
+            $this->rename_list[$data_item['CATEGORY']] = $data_item['NAME'];
+        }
     }
 
     private function importDataSort($data_sort) : array {

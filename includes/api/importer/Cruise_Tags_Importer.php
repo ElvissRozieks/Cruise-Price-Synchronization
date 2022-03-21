@@ -17,30 +17,45 @@ class Cruise_Tags_Importer {
     private array $tags_list;
     private static string $board_cpt = 'cruise';
     private static string $board_taxanomy = 'cruise_tag';
-    private static array $column = ['DEP-NAME-PORT','ITIN-CD'];
+    private static string $port_main = 'DEP-NAME-PORT';
+    private static string $ship_main = 'shipName';
     private static int $termID = 5;
     private static string $import_data = 'itinff_lva_eng.json';
+    private static string $import_data_ships = 'flatfile_lva_air.json';
 
     public function __construct() {
         $this->existing_jobs = array();
         $this->imported_data = 0;
-        $this->tags_list = [];
+        $this->column = [self::$port_main,'ITIN-CD'];
+        $this->column_ships = [self::$ship_main,'itinCd'];
         $this->json_file = new Cruise_File_Reader(self::$import_data);
+        $this->json_file_ships = new Cruise_File_Reader(self::$import_data_ships);
         $this->importer();
     }
 
     public function importer() : int {
         if($this->json_file) {
             $this->checkIfRecordsRemoved();
-            $import_data_extracted = $this->SingleImportDataSort($this->json_file->import_data_extracted);
+            $import_data_extracted = $this->SingleImportDataSort($this->json_file->import_data_extracted,$this->column,self::$port_main,false);
+            $import_data_extracted_ships = $this->SingleImportDataSort($this->json_file_ships->import_data_extracted,$this->column_ships,self::$ship_main,true);
             $single_import_data = [];
             if(!empty($import_data_extracted)) {
                 foreach($import_data_extracted as $key => $value) {
 
-                    $single_import_data['DEP-NAME-PORT'] = $key; 
+                    $single_import_data[self::$port_main] = $key; 
                     $single_import_data['ITIN-CD'] = implode(",", $value); 
 
-                    $this->importDataBuilder($single_import_data, 0);
+                    $this->importDataBuilder($single_import_data, 0, false, $this->column);
+                    $this->imported_data++;
+                }
+            }
+            if(!empty($import_data_extracted_ships)) {
+                foreach($import_data_extracted_ships as $key => $value) {
+
+                    $single_import_data[self::$ship_main] = $key; 
+                    $single_import_data['itinCd'] = implode(",", $value); 
+
+                    $this->importDataBuilder($single_import_data, 0, true, $this->column_ships);
                     $this->imported_data++;
                 }
             }
@@ -55,38 +70,38 @@ class Cruise_Tags_Importer {
         $postTerm = term_exists( $termArray->slug, $taxonomy ); // array is returned if taxonomy is given
     }
 
-    private function importDataBuilder($single_data_builder, $parentID) : void {
+    private function importDataBuilder($single_data_builder, $parentID, $isShip, $columns) : void {
         $durationTerms = [
-            'name'=> $single_data_builder['DEP-NAME-PORT'],
-            'description' => $single_data_builder['ITIN-CD'],
+            'name'=> $isShip ? $single_data_builder[self::$ship_main] : $single_data_builder[self::$port_main],
+            'description' => $isShip ? $single_data_builder['ITIN-CD'].',ship': $single_data_builder['ITIN-CD'],
             'term_id'=> self::$termID,
             'parent_term_id'=> $parentID
         ];
         
-        $this->importRecordData($durationTerms,$single_data_builder);
+        $this->importRecordData($durationTerms,$single_data_builder,$isShip,$columns);
 
     }
 
-    private function SingleImportDataSort($data_items) : array {
-        foreach ($data_items as $data_item) {
-            $current_dep_name = $data_item['DEP-NAME-PORT'];
-            foreach ($data_item as $key => $value) {
-                if (in_array($key, self::$column)) {
-                    if (array_key_exists($current_dep_name, $this->tags_list)) {
-                        if($key != 'DEP-NAME-PORT') {
-                            array_push($this->tags_list[$current_dep_name], $value);
+    private function SingleImportDataSort($data_items,$sort,$main,$isship) : array {
+        $this_list = [];
+            foreach ($data_items as $data_item) {
+                $current_dep_name = $data_item[$main];
+                foreach ($data_item as $key => $value) {
+                    if (in_array($key, $sort)) {
+                        if (array_key_exists($current_dep_name, $this_list)) {
+                            if($key != $main) {
+                                array_push($this_list[$current_dep_name], $value);
+                            }
                         }
-                    }
-                    else {
-                        if($key != 'DEP-NAME-PORT') {
-                            $this->tags_list[$current_dep_name] = array($value);
+                        else {
+                            if($key != $main) {
+                                $this_list[$current_dep_name] = array($value);
+                            }
                         }
                     }
                 }
             }
-        }
-
-        return $this->tags_list;
+        return $this_list;
     }
 
     private function importDataSort($data_sort) : array {
@@ -119,15 +134,15 @@ class Cruise_Tags_Importer {
 
     }
 
-    private function importRecordData($single_import_array,$single_data_builder) : ? string {
+    private function importRecordData($single_import_array,$single_data_builder,$isship,$columns) : ? string {
         if(!empty($single_import_array)) {
             //$slug = `${$single_data_builder['DEP-NAME-PORT']}-${$single_data_builder['ITIN-CD']}`;
             $insertedTerm = wp_insert_term(
-                $single_data_builder['DEP-NAME-PORT'],   // the term 
+                $single_data_builder[$columns[0]],   // the term 
                 self::$board_taxanomy, // the taxonomy
                 array(
-                    'description' => $single_data_builder['ITIN-CD'],
-                    'slug'        => $single_data_builder['DEP-NAME-PORT'],
+                    'description' => $isship ? $single_data_builder[$columns[1]].',ship' : $single_data_builder[$columns[1]],
+                    'slug'        => $single_data_builder[$columns[0]],
                     'parent'      => 0,
                 )
             );

@@ -18,8 +18,10 @@ class Cruise_List_Importer {
     private array $cruiser_list;
     private array $delist_list;
     private static string $board_cpt = 'cruise';
+    private static string $cruisetype = 'msc-cruises';
     private static string $cabin_cpt = 'cabin_type';
     private static string $location_cpt = 'location';
+    private static string $ship_definition = 'ship';
     private static string $board_taxanomy = 'brandstype';
     private static array $column = ['nights','itinCd','DEP-NAME-PORT','fareCode','category','itinDesc'];
     private static int $termID = 5;
@@ -117,10 +119,7 @@ class Cruise_List_Importer {
             var_dump(wp_strip_all_tags($single_data_builder['nights'] + 1 .' nights, '. $single_data_builder['itinDesc']));
         }
 
-        $description = '
-        <i class="material-icons">business</i><a href="/cruise-tag/msc-cruises">MSC CRUISES</a>
-        <i class="material-icons">directions_boat </i><a href="/cruise-tag/msc-divina">MSC DIVINA</a>
-        ';
+        $description = $this->getShortDescription($single_data_builder['itinCd'],'cruise_tag');
 
         $itinDesc = explode(",", $single_data_builder['itinDesc']);
         $itinDesc = implode(", ", $itinDesc);
@@ -205,9 +204,32 @@ class Cruise_List_Importer {
         return true;
     }
 
+    private function getShortDescription($single_import_itin,$taxonomy) {
+
+        $ship_list[] = '<i class="material-icons">business</i><a href="/cruise-tag/msc-cruises">MSC CRUISES</a>';
+        $terms = get_terms( array(
+            'taxonomy' => $taxonomy,
+            'hide_empty' => false,
+        ));
+
+        if(!empty($terms)) {
+            foreach($terms as $term) {
+                $description = explode(",", $term->description);
+                if(in_array($single_import_itin, $description)) {
+                    if(in_array(self::$ship_definition, $description)) {
+                        $ship_list[] = '<i class="material-icons">directions_boat </i><a href="/cruise-tag/'.$term->slug.'">'.$term->name.'</a>';
+                    }
+                }
+            }
+        }
+
+        return $ship_list_string = implode(", ", $ship_list);
+    }
+
     private function importRecordData($single_import_array,$single_data_builder) : ? string {
 
         $import_result = wp_insert_post($single_import_array);
+        set_post_thumbnail( $import_result, '258850' );
         if ( $import_result && !is_wp_error( $import_result ) ) {
             
             $import_ID = $import_result;
@@ -216,7 +238,7 @@ class Cruise_List_Importer {
             $taxonomy1 = 'cruise_tag';
             $taxonomy2 = 'cruise_type';
             $taxonomy3 = 'cruise_duration';
-            
+
             $terms1 = get_terms( array(
                 'taxonomy' => $taxonomy1,
                 'hide_empty' => false,
@@ -242,7 +264,7 @@ class Cruise_List_Importer {
 
             if(!empty($terms2)) {
                 foreach($terms2 as $term) {
-                    if($term->slug == 'msc-cruise') {
+                    if($term->slug == self::$cruisetype) {
                         $termObj = get_term_by( 'id', $term->term_id, $taxonomy2);
                         wp_set_object_terms($import_ID, $termObj->slug, $taxonomy2, true);
                     }

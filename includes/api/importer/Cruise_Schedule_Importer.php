@@ -87,7 +87,7 @@ class Cruise_Schedule_Importer {
         if($isArray) {
             $return_list = [];
             $disable_list = [];
-            //var_dump($value);
+            $this->deleteAllRecords();
             foreach ($value as $single_value) {
                 if(!in_array($single_value,$disable_list) && !empty($single_value)) {
                     $return_list[$single_value] = $this->getPostItemsByMetaLoop($postType,$key,$single_value);
@@ -99,6 +99,12 @@ class Cruise_Schedule_Importer {
         }
 
         return $this->getPostItemsByMetaLoop($postType,$key,$value);
+    }
+
+    private function deleteAllRecords() : void {
+        global $wpdb;
+        $table = $wpdb->prefix.'byt_cruise_schedule';
+        $wpdb->query("TRUNCATE TABLE $table");
     }
 
     private function importDataBuilder($single_data_builder, $parentID) : void {
